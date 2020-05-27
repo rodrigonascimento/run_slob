@@ -6,8 +6,9 @@
 # $2 == Testing type [ linux_nfs, dnfs, asm_dnfs ]
 # $3 == RUN Name. e.g. RUN001 
 # $4 == Number of laps
+# $5 == ANF Quota
 #
-# Example: $ ./run_slob 600 dnfs RUN003 7
+# Example: $ ./run_slob 600 dnfs RUN003 7 4TB
 # 
 # Run slob for 10 min/lap with a total of 7 laps. 
 # Store the results on TESTRUNS/dnfs/RUN003
@@ -22,6 +23,7 @@ LAP_RUN_TIME=${1}
 TEST_TYPE=${2}
 RUN_NAME=${3}
 MAX_LAPS=${4}
+ANF_QUOTA=${5}
 
 NUM_THREADS=1
 LAP=1
@@ -78,10 +80,10 @@ do
   sleep 3
 
   echo "Saving results..."
-  mv ${SLOB_HOME}/awr.txt ${RUN_HOME}/lap0${LAP}.awr.04users.0${NUM_THREADS}threads.txt 
-  mv ${SLOB_HOME}/mpstat.out ${RUN_HOME}/lap0${LAP}.mpstat.04users.0${NUM_THREADS}threads.out
-  mv ${SLOB_HOME}/vmstat.out ${RUN_HOME}/lap0${LAP}.vmstat.04users.0${NUM_THREADS}threads.out
-  mv ${SLOB_HOME}/iostat.out ${RUN_HOME}/lap0${LAP}.nfsiostat.04users.0${NUM_THREADS}threads.out
+  mv ${SLOB_HOME}/awr.txt ${RUN_HOME}/lap0${LAP}.awr.04users.0${NUM_THREADS}threads.${ANF_QUOTA}quota.txt 
+  mv ${SLOB_HOME}/mpstat.out ${RUN_HOME}/lap0${LAP}.mpstat.04users.0${NUM_THREADS}threads.${ANF_QUOTA}quota.out
+  mv ${SLOB_HOME}/vmstat.out ${RUN_HOME}/lap0${LAP}.vmstat.04users.0${NUM_THREADS}threads.${ANF_QUOTA}quota.out
+  mv ${SLOB_HOME}/iostat.out ${RUN_HOME}/lap0${LAP}.nfsiostat.04users.0${NUM_THREADS}threads.${ANF_QUOTA}quota.out
 
   echo "Taking a 120 seconds nap before next lap..."
   sleep 120
