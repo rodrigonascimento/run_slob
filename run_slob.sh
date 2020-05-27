@@ -73,14 +73,17 @@ do
     f_edit_slob_conf "THREADS_PER_SCHEMA" ${NUM_THREADS}
   fi 
 
+  echo "Running at ${NUM_THREADS}..."
   ${SLOB_HOME}/runit.sh 4 
   sleep 3
 
+  echo "Saving results..."
   mv ${SLOB_HOME}/awr.txt ${RUN_HOME}/lap0${LAP}.awr.04users.0${NUM_THREADS}threads.txt 
   mv ${SLOB_HOME}/mpstat.out ${RUN_HOME}/lap0${LAP}.mpstat.04users.0${NUM_THREADS}threads.out
   mv ${SLOB_HOME}/vmstat.out ${RUN_HOME}/lap0${LAP}.vmstat.04users.0${NUM_THREADS}threads.out
   mv ${SLOB_HOME}/iostat.out ${RUN_HOME}/lap0${LAP}.nfsiostat.04users.0${NUM_THREADS}threads.out
 
+  echo "Taking a 120 seconds nap before next lap..."
   sleep 120
 
   NUM_THREADS=$(( NUM_THREADS * 2 ))
