@@ -6,11 +6,12 @@
 # -tt == Testing type [ linux_nfs, dnfs, asm_dnfs ]
 # -rn == RUN Name. e.g. RUN001 
 # -nl == Number of laps
+# -inct == Increment thread by #
 # -anfquota == ANF Quota
 # -rac == Oracle RAC
 #
-# Example 1: $ ./run_slob -tm 600 -tt dnfs -rn RUN003 -nl 7 -anfquota 4TB
-# Example 2: $ ./run_slob -tm 600 -tt dnfs -rn RUN003 -nl 7 -rac
+# Example 1: $ ./run_slob -tm 600 -tt dnfs -rn RUN003 -nl 7 -inct 4 -anfquota 4TB
+# Example 2: $ ./run_slob -tm 600 -tt dnfs -rn RUN003 -nl 7 -inct 4 -rac
 # 
 # Run slob for 10 min/lap with a total of 7 laps. 
 # Store the results on TESTRUNS/dnfs/RUN003
