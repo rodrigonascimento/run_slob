@@ -133,32 +133,43 @@ do
   echo "RUN_NAME = ${RUN_NAME}"
   echo "MAX_LAPS = ${MAX_LAPS}"
   echo "INC_THREAD_BY = ${INC_THREAD_BY}"
-  ${SLOB_HOME}/runit.sh 3 
+  ${SLOB_HOME}/runit.sh 4 
   sleep 3
 
   echo "Saving results..."
+  if [ ${NUM_THREADS} -eq 1 ]
+  then
+    ZEROS="00"
+  elif [ ${NUM_THREADS} -gt 1 ] && [ ${NUM_THREADS} -lt 100 ]
+  then
+    ZEROS="0"
+  else
+    ZEROS=""
+  fi
+
   if [ ${RAC} -eq 0 ]
   then
-    mv ${SLOB_HOME}/awr.txt ${RUN_HOME}/lap0${LAP}.awr.0${NUM_THREADS}threads.${ANF_QUOTA}quota.txt 
-    mv ${SLOB_HOME}/mpstat.out ${RUN_HOME}/lap0${LAP}.mpstat.0${NUM_THREADS}threads.${ANF_QUOTA}quota.out
-    mv ${SLOB_HOME}/vmstat.out ${RUN_HOME}/lap0${LAP}.vmstat.0${NUM_THREADS}threads.${ANF_QUOTA}quota.out
-    mv ${SLOB_HOME}/iostat.out ${RUN_HOME}/lap0${LAP}.nfsiostat.0${NUM_THREADS}threads.${ANF_QUOTA}quota.out
+    mv ${SLOB_HOME}/awr.txt ${RUN_HOME}/lap0${LAP}.awr.${ZEROS}${NUM_THREADS}threads.${ANF_QUOTA}quota.txt 
+    mv ${SLOB_HOME}/mpstat.out ${RUN_HOME}/lap0${LAP}.mpstat.${ZEROS}${NUM_THREADS}threads.${ANF_QUOTA}quota.out
+    mv ${SLOB_HOME}/vmstat.out ${RUN_HOME}/lap0${LAP}.vmstat.${ZEROS}${NUM_THREADS}threads.${ANF_QUOTA}quota.out
+    mv ${SLOB_HOME}/iostat.out ${RUN_HOME}/lap0${LAP}.nfsiostat.${ZEROS}${NUM_THREADS}threads.${ANF_QUOTA}quota.out
   fi 
   
   if [ ${RAC} -eq 1 ]
   then
-    mv ${SLOB_HOME}/awr.txt ${RUN_HOME}/lap0${LAP}.awr.0${NUM_THREADS}threads.rac.txt
-    mv ${SLOB_HOME}/awr_rac.txt ${RUN_HOME}/lap0${LAP}.awr_rac.0${NUM_THREADS}threads.rac.txt
-    mv ${SLOB_HOME}/mpstat.out ${RUN_HOME}/lap0${LAP}.mpstat.0${NUM_THREADS}threads.rac.out
-    mv ${SLOB_HOME}/vmstat.out ${RUN_HOME}/lap0${LAP}.vmstat.0${NUM_THREADS}threads.rac.out
-    mv ${SLOB_HOME}/iostat.out ${RUN_HOME}/lap0${LAP}.nfsiostat.0${NUM_THREADS}threads.rac.out
+    mv ${SLOB_HOME}/awr.txt ${RUN_HOME}/lap0${LAP}.awr.${ZEROS}${NUM_THREADS}threads.rac.txt
+    mv ${SLOB_HOME}/awr_rac.txt ${RUN_HOME}/lap0${LAP}.awr_rac.${ZEROS}${NUM_THREADS}threads.rac.txt
+    mv ${SLOB_HOME}/mpstat.out ${RUN_HOME}/lap0${LAP}.mpstat.${ZEROS}${NUM_THREADS}threads.rac.out
+    mv ${SLOB_HOME}/vmstat.out ${RUN_HOME}/lap0${LAP}.vmstat.${ZEROS}${NUM_THREADS}threads.rac.out
+    mv ${SLOB_HOME}/iostat.out ${RUN_HOME}/lap0${LAP}.nfsiostat.${ZEROS}${NUM_THREADS}threads.rac.out
   fi
 
   echo "Taking a 120 seconds nap before next lap..."
   sleep 120
+  
   if [ ${NUM_THREADS} -eq 1 ]
   then
-    NUM_THREADS=$(( NUM_THREADS-1 + INC_THREAD_BY ))
+    NUM_THREADS=${INC_THREAD_BY}
   else
     NUM_THREADS=$(( NUM_THREADS + INC_THREAD_BY ))
   fi
