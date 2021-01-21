@@ -116,16 +116,16 @@ f_create_dirs
 RUN_HOME=${RESULTS_HOME}/${TEST_TYPE}/${RUN_NAME}
 
 f_edit_slob_conf "RUN_TIME" ${LAP_RUN_TIME}
-f_edit_slob_conf "THREADS_PER_SCHEMA" ${NUM_THREADS}
+# f_edit_slob_conf "THREADS_PER_SCHEMA" ${NUM_THREADS}
 
 while [ ${LAP} -le ${MAX_LAPS} ]
 do
   
-  SLOB_CONF_NUM_THREADS=$(grep ^THREADS_PER_SCHEMA ${SLOB_HOME}/slob.conf | awk -F"=" '{ print $2 }')
-  if [ ${SLOB_CONF_NUM_THREADS} != ${NUM_THREADS} ]
-  then
-    f_edit_slob_conf "THREADS_PER_SCHEMA" ${NUM_THREADS}
-  fi 
+  # SLOB_CONF_NUM_THREADS=$(grep ^THREADS_PER_SCHEMA ${SLOB_HOME}/slob.conf | awk -F"=" '{ print $2 }')
+  # if [ ${SLOB_CONF_NUM_THREADS} != ${NUM_THREADS} ]
+  # then
+  #   f_edit_slob_conf "THREADS_PER_SCHEMA" ${NUM_THREADS}
+  # fi 
 
   echo "Running at ${NUM_THREADS}..."
   echo "LAP_RUN_TIME = ${LAP_RUN_TIME}"
@@ -133,14 +133,14 @@ do
   echo "RUN_NAME = ${RUN_NAME}"
   echo "MAX_LAPS = ${MAX_LAPS}"
   echo "INC_THREAD_BY = ${INC_THREAD_BY}"
-  ${SLOB_HOME}/runit.sh 4 
+  ${SLOB_HOME}/runit.sh -s 4 -t ${NUM_THREADS}
   sleep 3
 
   echo "Saving results..."
-  if [ ${NUM_THREADS} -eq 1 ]
+  if [ ${NUM_THREADS} -ge 1 ] && [ ${NUM_THREADS} -le 9 ]
   then
     ZEROS="00"
-  elif [ ${NUM_THREADS} -gt 1 ] && [ ${NUM_THREADS} -lt 100 ]
+  elif [ ${NUM_THREADS} -gt 9 ] && [ ${NUM_THREADS} -lt 100 ]
   then
     ZEROS="0"
   else
@@ -171,7 +171,7 @@ do
   then
     NUM_THREADS=${INC_THREAD_BY}
   else
-    NUM_THREADS=$(( NUM_THREADS + INC_THREAD_BY ))
+    NUM_THREADS=$(( NUM_THREADS * INC_THREAD_BY ))
   fi
 
   LAP=$(( LAP + 1 ))
