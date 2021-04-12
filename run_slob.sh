@@ -10,8 +10,8 @@
 # -anfquota == ANF Quota
 # -rac == Oracle RAC
 #
-# Example 1: $ ./run_slob -tm 600 -tt dnfs -rn RUN003 -nl 7 -inct 4 -anfquota 4TB
-# Example 2: $ ./run_slob -tm 600 -tt dnfs -rn RUN003 -nl 7 -inct 4 -rac
+# Example 1: $ ./run_slob -tm 600 -tt dnfs -rn RUN003 -nl 7 -inct 2 -ss 2 -anfquota 4TB
+# Example 2: $ ./run_slob -tm 600 -tt dnfs -rn RUN003 -nl 7 -inct 2 -ss 2 -rac
 # 
 # Run slob for 10 min/lap with a total of 7 laps. 
 # Store the results on TESTRUNS/dnfs/RUN003
@@ -66,15 +66,23 @@ function f_arg_parser() {
     INC_THREAD_BY=${10}
   fi
 
-  if [ ${11} = "-anfquota" ]
+  if [ ${11} != "-ss" ]
+  then
+    echo "Positional argument different than -ss"
+    exit 1
+  else
+    SLOB_SCHEMA=${12}
+  fi 
+
+  if [ ${13} = "-anfquota" ]
   then
     RAC=0
-    ANF_QUOTA=${12}
-  elif [ ${11} = "-rac" ]
+    ANF_QUOTA=${14}
+  elif [ ${13} = "-rac" ]
   then
     RAC=1
   else
-    echo "Positional argument different than -anfquota or -rac: ${11}"
+    echo "Positional argument different than -anfquota or -rac: ${13}"
     exit 1
   fi
 }
@@ -109,7 +117,7 @@ function f_create_dirs() {
 
 # -- Main body ----------------------------------------------------------------
 
-f_arg_parser ${1} ${2} ${3} ${4} ${5} ${6} ${7} ${8} ${9} ${10} ${11} ${12}
+f_arg_parser ${1} ${2} ${3} ${4} ${5} ${6} ${7} ${8} ${9} ${10} ${11} ${12} ${13} ${14}
 
 f_create_dirs
 
@@ -133,7 +141,8 @@ do
   echo "RUN_NAME = ${RUN_NAME}"
   echo "MAX_LAPS = ${MAX_LAPS}"
   echo "INC_THREAD_BY = ${INC_THREAD_BY}"
-  ${SLOB_HOME}/runit.sh -s 4 -t ${NUM_THREADS}
+  echo "SLOB SCHEMAS =  ${SLOB_SCHEMA}"
+  ${SLOB_HOME}/runit.sh -s ${SLOB_SCHEMA} -t ${NUM_THREADS}
   sleep 3
 
   echo "Saving results..."
